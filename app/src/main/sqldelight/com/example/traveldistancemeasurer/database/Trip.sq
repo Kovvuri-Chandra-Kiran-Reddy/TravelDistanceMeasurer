@@ -1,0 +1,50 @@
+-- Trip table schema
+CREATE TABLE Trip (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  startTime INTEGER NOT NULL,
+  endTime INTEGER,
+  totalDistance REAL NOT NULL DEFAULT 0.0,
+  duration INTEGER NOT NULL DEFAULT 0,
+  isActive INTEGER NOT NULL DEFAULT 0,
+  name TEXT
+);
+
+-- Get all completed trips ordered by start time (newest first)
+getAllTrips:
+SELECT * FROM Trip
+WHERE isActive = 0
+ORDER BY startTime DESC;
+
+-- Get the currently active trip
+getActiveTrip:
+SELECT * FROM Trip
+WHERE isActive = 1
+LIMIT 1;
+
+-- Get a specific trip by ID
+getTripById:
+SELECT * FROM Trip
+WHERE id = ?;
+
+-- Insert a new trip
+insertTrip:
+INSERT INTO Trip (startTime, endTime, totalDistance, duration, isActive, name)
+VALUES (?, ?, ?, ?, ?, ?);
+
+-- Update trip details
+updateTrip:
+UPDATE Trip SET
+  endTime = ?,
+  totalDistance = ?,
+  duration = ?,
+  isActive = ?,
+  name = ?
+WHERE id = ?;
+
+-- Delete a trip
+deleteTrip:
+DELETE FROM Trip WHERE id = ?;
+
+-- Get the last inserted row ID
+lastInsertRowId:
+SELECT last_insert_rowid();

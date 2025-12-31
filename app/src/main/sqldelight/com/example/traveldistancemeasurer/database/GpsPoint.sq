@@ -1,0 +1,38 @@
+-- GpsPoint table schema
+CREATE TABLE GpsPoint (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tripId INTEGER NOT NULL,
+  latitude REAL NOT NULL,
+  longitude REAL NOT NULL,
+  timestamp INTEGER NOT NULL,
+  FOREIGN KEY (tripId) REFERENCES Trip(id) ON DELETE CASCADE
+);
+
+-- Create index for faster queries on tripId
+CREATE INDEX idx_trip_id ON GpsPoint(tripId);
+
+-- Get all GPS points for a specific trip, ordered by timestamp
+getPointsForTrip:
+SELECT * FROM GpsPoint
+WHERE tripId = ?
+ORDER BY timestamp ASC;
+
+-- Insert a new GPS point
+insertPoint:
+INSERT INTO GpsPoint (tripId, latitude, longitude, timestamp)
+VALUES (?, ?, ?, ?);
+
+-- Get the last GPS point for a specific trip
+getLastPointForTrip:
+SELECT * FROM GpsPoint
+WHERE tripId = ?
+ORDER BY timestamp DESC
+LIMIT 1;
+
+-- Delete all GPS points for a specific trip
+deletePointsForTrip:
+DELETE FROM GpsPoint WHERE tripId = ?;
+
+-- Get the count of GPS points for a specific trip
+getPointCount:
+SELECT COUNT(*) FROM GpsPoint WHERE tripId = ?;
